@@ -1,23 +1,51 @@
-import { Form, Input, Button, Checkbox, Row, Col } from 'antd';
+import { Form, Input, Button, message, Row, Col } from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import {loginAction} from '../../Actions/SesionActions'
+import axios from 'axios';
+import { useState } from 'react';
+import {API_HOST} from '../../config.json'
+
 
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 8  },
 };
+
 const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
 const Login = () => {
 
+  const dispatch = useDispatch();
+  const userLogin = sesionData => dispatch(loginAction(sesionData)) 
 
-  const onFinish = values => {
-    console.log('Success:', values);
-  };
+  const [form, setForm] = useState({
+    user: "",
+    pass: ""
+  });
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
+  const onFieldsChange = (current) => {
+    setForm({
+      ...form,
+      [current[0].name[0]]: current[0].value
+    })
   };
+  
+  const login = () => {
+    axios.post(`${API_HOST}/login`, form).then(response => {
+
+      if(!response.data.token){
+        message.error(response.data.msg)
+      }
+
+      userLogin(response.data)
+
+      // setToken(response.data.token);
+      // setUser(response.data.user);
+
+    }).catch(err => console.error(err))
+  }
 
 
   return (
@@ -32,11 +60,12 @@ const Login = () => {
 
                 <Form
                     name="basic"
-                    onFinish={onFinish}
+                    onFieldsChange={onFieldsChange}
                 >
                 <Form.Item
                     label="Username"
-                    name="username"
+                    name="user"
+                    
                     rules={[{ required: true, message: 'Please input your username!' }]}
                 >
                     <Input />
@@ -44,14 +73,14 @@ const Login = () => {
 
                 <Form.Item
                     label="Password"
-                    name="password"
+                    name="pass"
                     rules={[{ required: true, message: 'Please input your password!' }]}
                 >
                     <Input.Password />
                 </Form.Item>
 
                 <Form.Item {...tailLayout}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" onClick={login}>
                         Submit
                     </Button>
                 </Form.Item>

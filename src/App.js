@@ -1,19 +1,17 @@
 import React from 'react';
-import { Layout, Menu, Card, Col, Row, Dropdown  } from 'antd'
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
-import Products from './Views/products/Products'
+import { Provider } from 'react-redux'
+import store from './store'
 import AppRouter from './router'; 
 import './App.css';
 import 'antd/dist/antd.css';
 
-import Logo from './img/logo.png';
-
-const { SubMenu, Item } = Menu;
-const { Header, Sider } = Layout;
-
-// export default () => {
+export default () => {
+  return <Provider store={store}>
+      <App />
+    </Provider>
   
-// }
+}
+
 
 function App() {
 
@@ -27,6 +25,6 @@ function App() {
   );
 }
 
-export default App;
+// export default App;
 
 
