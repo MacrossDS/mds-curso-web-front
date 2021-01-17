@@ -1,9 +1,10 @@
 import { Form, Input, Button, message, Row, Col } from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
-import {loginAction} from '../../Actions/SesionActions'
+import {loginAction} from '../../Actions/SesionActions';
 import axios from 'axios';
 import { useState } from 'react';
-import {API_HOST} from '../../config.json'
+import {API_HOST} from '../../config.json';
+import {useHistory} from 'react-router-dom'
 
 
 const layout = {
@@ -17,8 +18,12 @@ const tailLayout = {
 
 const Login = () => {
 
+  const history = useHistory();
   const dispatch = useDispatch();
-  const userLogin = sesionData => dispatch(loginAction(sesionData)) 
+  const userLogin = (sesionData, cb) => {
+    dispatch(loginAction(sesionData)) 
+    cb()
+  }
 
   const [form, setForm] = useState({
     user: "",
@@ -37,9 +42,12 @@ const Login = () => {
 
       if(!response.data.token){
         message.error(response.data.msg)
+      }else{
+        userLogin(response.data, () => {
+          history.push("/products")
+        })
       }
 
-      userLogin(response.data)
 
       // setToken(response.data.token);
       // setUser(response.data.user);

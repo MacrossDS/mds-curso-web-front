@@ -8,6 +8,7 @@ import {
 import Logo from '../../img/logo.png';
 import axios from "axios";
 import "./Products.css"; 
+import {request} from '../../Helpers'
 
 
 const { SubMenu, Item } = Menu;
@@ -25,7 +26,7 @@ const Products = () => {
   }, []);
 
   const getProductos = () => {
-    return axios.get(`http://localhost:3001/products`);
+    return request.get("/products")
   };
 
   const handleMenuClick = () => {
